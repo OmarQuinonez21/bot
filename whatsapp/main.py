@@ -1,7 +1,7 @@
 import pyautogui as pt
 from time import sleep
 import pyperclip
-import random
+
 
 sleep(2)
 
@@ -37,12 +37,20 @@ def post_response(message):
     x = position[0]
     y = position[1]
     # puede que a este punto no funcione por las dimenciones de la pantalla y las coordenadas
+    # necesita estar en las coordenadas de inicio
     pt.moveTo(x + 27, y - 47, duration=.05)
     pt.click()
+    #Aqui comienza a escribir
     pt.typewrite(message, interval=.01)
+    enter_function()
+    pt.typewrite(message, interval=.01)
+    #pt.typewrite("\n", interval=.01)
 
-    pt.typewrite("\n", interval=.01)
 
+def enter_function():
+    pt.keyDown('shift')
+    pt.press('enter')
+    pt.keyUp('shift')
 
 post_response(get_message())
 

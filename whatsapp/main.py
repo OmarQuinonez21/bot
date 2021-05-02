@@ -42,13 +42,13 @@ def post_response(message):
     pt.click()
     # Aqui comienza a escribir
     pt.typewrite(message, interval=.01)
-    # pt.typewrite("\n", interval=.01)
+    pt.typewrite("\n", interval=.01)
 
 
 # Processes response
 def process_response(message):
     random_no = random.randrange(3)
-#Si no hay un ? en el mensaje, se saca un numero al azar y se responde dependiendo de ello
+    # Si no hay un ? en el mensaje, se saca un numero al azar y se responde dependiendo de ello
     if "?" in str(message).lower():
         return "Gracias por contactarnos, en un momento su duda será solucionada"
     else:
@@ -66,23 +66,25 @@ def enter_function():
     pt.press('enter')
     pt.keyUp('shift')
 
+
 # Check for new messages
 def check_for_new_messages():
-    pt.moveTo(x+2, y-55, duration=.5)
+    pt.moveTo(x + 2, y - 55, duration=.5)
+
     while True:
-        # Checa continuamente por el ciculo verde y nuevos mensajes
+        #Continuosly checks for green dots
         try:
-            position = pt.locateOnScreen("whatsapp/green_circle.png", confidence=.8)
+            position = pt.locateOnScreen("whatsapp/green_circle.png", confidence=.7)
 
             if position is not None:
                 pt.moveTo(position)
                 pt.moveRel(-100, 0)
                 pt.click()
                 sleep(.5)
+                #este except no esta funcionando
         except(Exception):
-            print("No fueron encontrados nuevos mensajes")
-
-        if pt.pixelMatchesColor(int(x), int(y), (255,255,255), tolerance= 10 ):
+            print("No new messages located")
+        if pt.pixelMatchesColor(int(x+2), int(y-55), (255,255,255), tolerance=10):
             print("is white")
             processed_message = process_response(get_message())
             post_response(processed_message)
@@ -90,6 +92,7 @@ def check_for_new_messages():
             print("no new messages yet...")
         sleep(5)
 
+
 check_for_new_messages()
-#processed_message = process_response(get_message())
-#post_response(processed_message)
+# processed_message = process_response(get_message())
+# post_response(processed_message)

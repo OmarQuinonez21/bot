@@ -81,7 +81,7 @@ def check_for_new_messages():
                 pt.moveRel(-100, 0)
                 pt.click()
                 sleep(.5)
-                #este except no esta funcionando
+                #este except no esta funcionando.
         except(Exception):
             print("No new messages located")
         if pt.pixelMatchesColor(int(x+2), int(y-55), (255,255,255), tolerance=10):

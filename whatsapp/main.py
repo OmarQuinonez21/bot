@@ -1,7 +1,7 @@
 import pyautogui as pt
 from time import sleep
 import pyperclip
-
+import random
 
 sleep(2)
 
@@ -13,7 +13,7 @@ y = position1[1]
 # Gets message
 def get_message():
     global x, y
-#Copia el mensaje recibido
+    # Copia el mensaje recibido
     position = pt.locateOnScreen("whatsapp/smiley_paperclip.png", confidence=.5)
     x = position[0]
     y = position[1]
@@ -26,7 +26,7 @@ def get_message():
     whatsapp_message = pyperclip.paste()
     pt.click()
     print("Message received: " + whatsapp_message)
-#Retorna el mensaje recibido
+    # Retorna el mensaje recibido
     return whatsapp_message
 
 
@@ -40,18 +40,56 @@ def post_response(message):
     # necesita estar en las coordenadas de inicio
     pt.moveTo(x + 27, y - 47, duration=.05)
     pt.click()
-    #Aqui comienza a escribir
+    # Aqui comienza a escribir
     pt.typewrite(message, interval=.01)
-    enter_function()
-    pt.typewrite(message, interval=.01)
-    #pt.typewrite("\n", interval=.01)
+    # pt.typewrite("\n", interval=.01)
 
 
+# Processes response
+def process_response(message):
+    random_no = random.randrange(3)
+#Si no hay un ? en el mensaje, se saca un numero al azar y se responde dependiendo de ello
+    if "?" in str(message).lower():
+        return "Gracias por contactarnos, en un momento su duda será solucionada"
+    else:
+        if random_no == 0:
+            return "hola"
+        elif random_no == 1:
+            return "Que onda"
+        else:
+            return "Que rollo"
+
+
+# Da un enter entre las lineas de whatsapp
 def enter_function():
     pt.keyDown('shift')
     pt.press('enter')
     pt.keyUp('shift')
 
-post_response(get_message())
+# Check for new messages
+def check_for_new_messages():
+    pt.moveTo(x+2, y-55, duration=.5)
+    while True:
+        # Checa continuamente por el ciculo verde y nuevos mensajes
+        try:
+            position = pt.locateOnScreen("whatsapp/green_circle.png", confidence=.8)
 
+            if position is not None:
+                pt.moveTo(position)
+                pt.moveRel(-100, 0)
+                pt.click()
+                sleep(.5)
+        except(Exception):
+            print("No fueron encontrados nuevos mensajes")
 
+        if pt.pixelMatchesColor(int(x), int(y), (255,255,255), tolerance= 10 ):
+            print("is white")
+            processed_message = process_response(get_message())
+            post_response(processed_message)
+        else:
+            print("no new messages yet...")
+        sleep(5)
+
+check_for_new_messages()
+#processed_message = process_response(get_message())
+#post_response(processed_message)
